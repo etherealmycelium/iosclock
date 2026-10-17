@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+  <meta name="theme-color" content="#000000">
+  <meta name="color-scheme" content="dark">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Bouncy Clock">
+  <meta name="description" content="A clean, bouncing OLED-friendly clock for your desk. No accounts, no ads, works offline.">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="./styles.css">
+  <title>Bouncy Clock</title>
+</head>
+<body>
+  <main id="stage" aria-label="Bouncing digital clock">
+    <div id="travel-area" aria-hidden="true">
+      <div id="clock" class="clock" style="transform:translate3d(0px,0px,0px)">
+        <span id="time" class="clock-time">6:59</span>
+        <span id="period" class="clock-period">PM</span>
+      </div>
+    </div>
+
+    <div id="tap-tip" aria-hidden="true">tap to show controls · swipe to dim</div>
+
+    <button id="settings-button" class="floating-settings" aria-label="Open clock settings" title="Settings" type="button">
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8.6a3.4 3.4 0 1 0 0 6.8 3.4 3.4 0 0 0 0-6.8Z"/><path d="m19.8 13.7 1.1.9-1.8 3.1-1.4-.5a7.6 7.6 0 0 1-1.5.9l-.3 1.5h-3.6l-.3-1.5a7.6 7.6 0 0 1-1.5-.9l-1.4.5-1.8-3.1 1.1-.9a7.4 7.4 0 0 1 0-1.7l-1.1-.9 1.8-3.1 1.4.5a7.6 7.6 0 0 1 1.5-.9l.3-1.5h3.6l.3 1.5a7.6 7.6 0 0 1 1.5.9l1.4-.5 1.8 3.1-1.1.9a7.4 7.4 0 0 1 0 1.7Z" transform="translate(-1.8,-.8) scale(1.13)"/></svg>
+    </button>
+  </main>
+
+  <div id="dialog-layer" class="dialog-layer" hidden>
+    <div id="dialog-backdrop" class="dialog-backdrop"></div>
+    <section id="settings-dialog" class="settings-dialog" role="dialog" aria-modal="true" aria-labelledby="settings-title" tabindex="-1">
+      <header class="dialog-header">
+        <div>
+          <div class="eyebrow">BOUNCY CLOCK</div>
+          <h1 id="settings-title">Settings</h1>
+        </div>
+        <button id="close-button" class="icon-button" type="button" aria-label="Close settings">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M5 5 19 19M19 5 5 19"/></svg>
+        </button>
+      </header>
+
+      <div class="settings-grid">
+        <section class="setting-group" aria-labelledby="display-section">
+          <h2 id="display-section">DISPLAY</h2>
+
+          <div class="setting-range">
+            <div class="range-heading"><label for="brightness">Clock brightness</label><output id="brightness-value" for="brightness">35%</output></div>
+            <input id="brightness" type="range" min="4" max="100" step="1" value="35">
+            <p>Swipe up or down on the clock to adjust. This dims the digits, not your iPhone's actual screen setting.</p>
+          </div>
+
+          <label class="setting-row" for="use-24h"><span>24-hour time</span><input class="switch" id="use-24h" type="checkbox" role="switch"></label>
+          <label class="setting-row" for="leading-zero"><span>Leading zero</span><input class="switch" id="leading-zero" type="checkbox" role="switch"></label>
+          <label class="setting-row" for="show-seconds"><span>Show seconds</span><input class="switch" id="show-seconds" type="checkbox" role="switch"></label>
+          <label class="setting-row" for="stay-awake"><span>Prevent locking<small>Keep the screen on while the clock is visible, where supported.</small></span><input class="switch" id="stay-awake" type="checkbox" role="switch"></label>
+          <p id="wake-message" class="support-message" role="status" aria-live="polite"></p>
+        </section>
+
+        <section class="setting-group" aria-labelledby="motion-section">
+          <h2 id="motion-section">SCREENSAVER</h2>
+          <label class="setting-row" for="bounce"><span>Bouncing clock<small>Classic DVD-style reflections at the edges.</small></span><input class="switch" id="bounce" type="checkbox" role="switch" checked></label>
+
+          <div class="setting-range">
+            <div class="range-heading"><label for="speed">Bounce speed</label><output id="speed-value" for="speed">Normal</output></div>
+            <input id="speed" type="range" min="1" max="5" step="1" value="2">
+            <div class="range-ends"><span>GENTLE</span><span>FAST</span></div>
+          </div>
+          <div class="setting-range">
+            <div class="range-heading"><label for="size">Clock size</label><output id="size-value" for="size">78%</output></div>
+            <input id="size" type="range" min="48" max="94" step="1" value="78">
+            <div class="range-ends"><span>MORE MOVEMENT</span><span>BIGGER DIGITS</span></div>
+          </div>
+          <label class="setting-row" for="change-colour"><span>Change colour on bounce<small>The classic DVD screensaver touch.</small></span><input class="switch" id="change-colour" type="checkbox" role="switch"></label>
+          <div class="setting-colours">
+            <span>Clock colour</span>
+            <div class="colour-options" role="group" aria-label="Clock colour">
+              <button class="colour-swatch" type="button" data-colour="white" aria-label="White" title="White" aria-pressed="true"><i style="--swatch:#ffffff"></i></button>
+              <button class="colour-swatch" type="button" data-colour="warm" aria-label="Warm" title="Warm" aria-pressed="false"><i style="--swatch:#ffdcb4"></i></button>
+              <button class="colour-swatch" type="button" data-colour="amber" aria-label="Amber" title="Amber" aria-pressed="false"><i style="--swatch:#ffac5f"></i></button>
+              <button class="colour-swatch" type="button" data-colour="mint" aria-label="Mint" title="Mint" aria-pressed="false"><i style="--swatch:#9be3ce"></i></button>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <footer class="dialog-footer">
+        <p><strong>OLED note:</strong> Movement spreads out pixel wear, and low brightness helps. Neither can guarantee zero burn-in. Avoid leaving the display at full brightness for long periods.</p>
+        <span>Offline · No ads · No accounts</span>
+      </footer>
+    </section>
+  </div>
+
+  <div id="corner-toast" role="status" aria-live="polite">PERFECT CORNER ✦</div>
+  <script src="./app.js" defer></script>
+</body>
+</html>
